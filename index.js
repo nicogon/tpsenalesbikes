@@ -17,37 +17,36 @@ glob("*.txt", function(er, files) {
     try {
       let stations = JSON.parse(fs.readFileSync(file));
 
+      //Esta poronga es si quiero filtrar por estaciones cerca de determinado punto (para ponele despues comparar palermo con el centro)
 
-      arrNames = ['398 - Rojas','299 - HIDALGO', '241 - Sanatorio Mendez', '272 - Plaza Bruno Giordano'];
+      latitude = -34.5910737; //-34.613457;
+      longitude = -58.3799953; //-58.4401581;
 
-   
-      latitude=-34.5910737;//-34.613457;
-      longitude=-58.3799953//-58.4401581;
+      radius = 0.02;
+      stations = stations.filter(station => {
+        return (
+          radius > Math.abs(station.address.longitude - longitude) &&
+          radius > Math.abs(station.address.latitude - latitude)
+        );
+      });
 
-        radius = 0.020;
-      stations =  stations.filter(station => {
-       return   radius > Math.abs(station.address.longitude - longitude) && radius > Math.abs(station.address.latitude - latitude)
-      })
-
-
-
-
-        console.log(stations.length)
+      //corto ejecucion porque si no rompe despues
       if (stations.length == 0) throw "asd";
 
+      // otros filtros para probar de una sola estacion
       //   station = stations.find(station => station["station_number"] == 256);
 
       count = 0;
 
       count2 = 0;
       stations.forEach(station => {
-        count2 += station.status.total_disabled_bikes
+        count2 += station.status.total_disabled_bikes;
         count += station.status.total_available_bikes;
       });
 
       fs.appendFileSync(
         "junk.csv",
-        //  `${timeStamp},${station.status.total_available_bikes}\n`
+        //  `${timeStamp},${station.status.total_available_bikes}\n` aca si solo lo quiero hacer ocn una estacion
         `${timeStamp},${count},${count2}\n`
       );
       //     console.log(station)
