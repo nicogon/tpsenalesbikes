@@ -2,7 +2,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 plt.style.use('ggplot')
 
- 
+from scipy.stats import mannwhitneyu
+
+#scipy.stats.mannwhitneyu¶
 
 
 
@@ -79,10 +81,15 @@ dataFrameViajesClimaAgrupado = dataFrameViajesClima.groupby(by=(dataFrameViajesC
 dataFrameViajesClimaAgrupado.boxplot(column='viajes')
 
 
+listaC= dataFrameViajesClimaAgrupado.get_group('con lluvia')['viajes'].tolist()
 
-print(dataFrameViajesClima.describe())
+listaS= dataFrameViajesClimaAgrupado.get_group('sin lluvia')['viajes'].tolist()
 
-print(dataFrameViajesClimaAgrupado.describe())
+print(mannwhitneyu(listaC,listaS))
+
+#print(dataFrameViajesClima.describe())
+
+#print(dataFrameViajesClimaAgrupado.describe())
 
 
 #pepe.corr()
